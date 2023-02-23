@@ -101,4 +101,21 @@ describe("Trending Repos View", () => {
         expect(listItems).toHaveLength(1)
         expect(await screen.findByText("test/Bar")).toBeVisible()
     })
+
+    test("should call api with language name if filter is active", () => {
+        const spy = jest.fn()
+        render(
+            <ApiProvider api={{
+                get: spy
+            }}>
+                <TrendingReposView />
+            </ApiProvider>
+        );
+
+        screen.queryByRole("option", {
+            name: "Javascript"
+        })?.click()
+
+        expect(spy).toBeCalledWith("https://api.github.com/search/repositories?q=created:%3E2017-01-10&sort=stars&order=desc")
+    })
 })

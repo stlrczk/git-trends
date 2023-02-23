@@ -2,20 +2,23 @@ import { useQuery } from "@tanstack/react-query"
 import { AxiosResponse } from "axios"
 import { useState } from "react"
 import { useApi } from "../../ApiContext"
-import { RepositoriesResponse } from "./models"
+import { Language, RepositoriesResponse } from "./models"
 
-function useTrendingRepos() {
+function useTrendingRepos(language?: Language) {
     const api = useApi()
     const trendingReposQuery = useQuery({
-        queryKey: ["trendingRepos"],
+        queryKey: ["trendingRepos", language],
         queryFn: async () => {
-            const response = await api?.get("https://api.github.com/search/repositories?q=created:%3E2017-01-10&sort=stars&order=desc") as AxiosResponse<RepositoriesResponse>
+            const response = await api?.get(
+                `https://api.github.com/search/repositories?q=created:%3E2017-01-10${language ? `+language:${language}` : ""}&sort=stars&order=desc`
+            ) as AxiosResponse<RepositoriesResponse>
             return response?.data || null
         }
     })
 
     return {
-        items: trendingReposQuery.data?.items || []
+        items: trendingReposQuery.data?.items || [],
+        isLoading: trendingReposQuery.isLoading,
     }
 }
 
@@ -61,36 +64,69 @@ function useFavouriteRepos() {
 
 
 function TrendingReposView() {
-    const { items } = useTrendingRepos()
-    const { favouriteReposIds, toggleRepo } = useFavouriteRepos()
     const [isFavouritesOnly, setFavouritesOnly] = useState(false)
+    const { favouriteReposIds, toggleRepo } = useFavouriteRepos()
+    const [languageFilters, setLanguageFilters] = useState<Language | undefined>(undefined)
+    const { items, isLoading } = useTrendingRepos(languageFilters)
+
 
     return (
         <>
             <h1>Trending Repos View</h1>
-            <label>
-                Show only Favourites
-                <input
-                    type="checkbox"
-                    checked={isFavouritesOnly}
-                    onChange={() => setFavouritesOnly(prev => !prev)}
-                />
-            </label>
-            <ol>
-                {items
-                    .filter(repository => isFavouritesOnly ? favouriteReposIds.includes(`${repository.id}`) : true)
-                    .map(repository => (
-                        <li key={repository.id}>
-                            {repository.full_name}
-                            <input
-                                type="checkbox"
-                                onChange={() => toggleRepo(`${repository.id}`)}
-                                checked={favouriteReposIds.includes(`${repository.id}`)}
-                                />
-                        </li>
-                    ))
-                }
-            </ol>
+            <div>
+                <label>
+                    Show only Favourites
+                    <input
+                        type="checkbox"
+                        checked={isFavouritesOnly}
+                        onChange={() => setFavouritesOnly(prev => !prev)}
+                    />
+                </label>
+            </div>
+            <div>
+                <select
+                    defaultValue="all"
+                    value={languageFilters}
+                    onChange={e => setLanguageFilters(e.target.value as Language)}
+                >
+                    <option value="javascript">Javascript</option>
+                    <option value="python">Python</option>
+                    <option value="golang">Go Lang</option>
+                    <option value={undefined}>Show All</option>
+                </select>
+            </div>
+            { isLoading ? "Loading..." : (
+                <ol>
+                    {items
+                        .filter(repository => isFavouritesOnly ? favouriteReposIds.includes(`${repository.id}`) : true)
+                        .map(repository => (
+                            <li key={repository.id}>
+                                <h3>
+                                    <a href={repository.html_url}>
+                                        {repository.full_name}
+                                    </a>
+                                    {" "}
+                                    {repository.stargazers_count} stars
+                                </h3>
+                                <p>
+                                    {repository.description}
+                                </p>
+                                <p>
+                                    (lang: {repository.language})
+                                </p>
+                                <label>
+                                    Favourite
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => toggleRepo(`${repository.id}`)}
+                                        checked={favouriteReposIds.includes(`${repository.id}`)}
+                                    />
+                                </label>
+                            </li>
+                        ))
+                    }
+                </ol>
+            )}
         </>
     )
 }
