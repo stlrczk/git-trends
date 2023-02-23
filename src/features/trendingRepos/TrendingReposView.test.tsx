@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import TrendingReposView from './TrendingReposView';
 import { ApiProvider } from '../../ApiContext';
+import userEvent from '@testing-library/user-event';
 
 const apiResponse = {
     data: {
@@ -112,10 +113,8 @@ describe("Trending Repos View", () => {
             </ApiProvider>
         );
 
-        screen.queryByRole("option", {
-            name: "Javascript"
-        })?.click()
+        userEvent.selectOptions(screen.getByRole('combobox'), ["javascript"])
 
-        expect(spy).toBeCalledWith("https://api.github.com/search/repositories?q=created:%3E2017-01-10&sort=stars&order=desc")
+        expect(spy).toBeCalledWith(expect.stringContaining("javascript"))
     })
 })

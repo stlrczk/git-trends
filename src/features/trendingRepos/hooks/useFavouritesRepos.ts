@@ -24,7 +24,6 @@ function useFavouriteRepos() {
         window.localStorage.setItem(FAVOURITE_REPOS_LOCAL_STORAGE_KEY, newState.join(","))
     }
     const toggleRepo = (id: string) => {
-        console.log({ id })
         if (favouriteReposIds.includes(id)) {
             removeRepo(id)
         } else {
