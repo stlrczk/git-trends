@@ -22,29 +22,29 @@ function useTrendingRepos() {
 const FAVOURITE_REPOS_LOCAL_STORAGE_KEY = "favRepos"
 
 function useFavouriteRepos() {
-    const [favouriteRepos, setFavouriteRepos] = useState(
+    const [favouriteReposIds, setFavouriteReposIds] = useState(
         window.localStorage.getItem(FAVOURITE_REPOS_LOCAL_STORAGE_KEY)?.split(",") || []
     )
     const addRepo = (id: string) => {
-        if (favouriteRepos.includes(id)) {
+        if (favouriteReposIds.includes(id)) {
             return
         }
-        const newState = [...favouriteRepos, id]
-        setFavouriteRepos(newState)
+        const newState = [...favouriteReposIds, id]
+        setFavouriteReposIds(newState)
         window.localStorage.setItem(FAVOURITE_REPOS_LOCAL_STORAGE_KEY, newState.join(","))
     }
 
     const removeRepo = (id: string) => {
-        if (!favouriteRepos.includes(id)) {
+        if (!favouriteReposIds.includes(id)) {
             return
         }
-        const newState = favouriteRepos.filter(repoId => repoId !== id)
-        setFavouriteRepos(newState)
+        const newState = favouriteReposIds.filter(repoId => repoId !== id)
+        setFavouriteReposIds(newState)
         window.localStorage.setItem(FAVOURITE_REPOS_LOCAL_STORAGE_KEY, newState.join(","))
     }
     const toggleRepo = (id: string) => {
         console.log({ id })
-        if (favouriteRepos.includes(id)) {
+        if (favouriteReposIds.includes(id)) {
             removeRepo(id)
         } else {
             addRepo(id)
@@ -52,7 +52,7 @@ function useFavouriteRepos() {
     }
 
     return {
-        favouriteRepos,
+        favouriteReposIds,
         addRepo,
         removeRepo,
         toggleRepo
@@ -62,22 +62,34 @@ function useFavouriteRepos() {
 
 function TrendingReposView() {
     const { items } = useTrendingRepos()
-    const { favouriteRepos, toggleRepo } = useFavouriteRepos()
+    const { favouriteReposIds, toggleRepo } = useFavouriteRepos()
+    const [isFavouritesOnly, setFavouritesOnly] = useState(false)
 
     return (
         <>
             <h1>Trending Repos View</h1>
+            <label>
+                Show only Favourites
+                <input
+                    type="checkbox"
+                    checked={isFavouritesOnly}
+                    onChange={() => setFavouritesOnly(prev => !prev)}
+                />
+            </label>
             <ol>
-                {items.map(repository => (
-                    <li key={repository.id}>
-                        {repository.full_name}
-                        <input
-                            type="checkbox"
-                            onChange={() => toggleRepo(`${repository.id}`)}
-                            checked={favouriteRepos.includes(`${repository.id}`)}
-                            />
-                    </li>
-                ))}
+                {items
+                    .filter(repository => isFavouritesOnly ? favouriteReposIds.includes(`${repository.id}`) : true)
+                    .map(repository => (
+                        <li key={repository.id}>
+                            {repository.full_name}
+                            <input
+                                type="checkbox"
+                                onChange={() => toggleRepo(`${repository.id}`)}
+                                checked={favouriteReposIds.includes(`${repository.id}`)}
+                                />
+                        </li>
+                    ))
+                }
             </ol>
         </>
     )

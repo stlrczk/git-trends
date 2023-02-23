@@ -90,4 +90,15 @@ describe("Trending Repos View", () => {
             expect(checkbox).toBeChecked()
         })
     })
+
+    test("should show only fav repos if fav-only filter is active", async () => {
+        window.localStorage.setItem("favRepos", "2")
+        render(<View />)
+
+        screen.queryByLabelText("Show only Favourites")?.click()
+
+        const listItems = await screen.findAllByRole("listitem");
+        expect(listItems).toHaveLength(1)
+        expect(await screen.findByText("test/Bar")).toBeVisible()
+    })
 })
