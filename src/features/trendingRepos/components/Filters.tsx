@@ -14,18 +14,19 @@ function Filters({
     languageFilters
 }: Props) {
     return (
-        <>
-            <div>
-                <label>
-                    Show only Favourites
+        <fieldset>
+            <div className="field-row">
                     <input
                         type="checkbox"
+                        id="foo"
                         checked={isFavouriteOnlyActive}
                         onChange={onFavouriteCheckboxClick}
                     />
-                </label>
+                    <label htmlFor="foo">
+                        Show only Favourites
+                    </label>
             </div>
-            <div>
+            <div className="field-row">
                 <select
                     defaultValue="all"
                     value={languageFilters}
@@ -37,7 +38,7 @@ function Filters({
                     <option value={undefined}>Show All</option>
                 </select>
             </div>
-        </>
+        </fieldset>
     )
 }
 

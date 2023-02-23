@@ -13,27 +13,34 @@ function RepositoryItem({
 }: Props) {
     return (
         <li key={repository.id}>
-            <h3>
+            <h4>
                 <a href={repository.html_url}>
                     {repository.full_name}
                 </a>
-                {" "}
-                {repository.stargazers_count} stars
-            </h3>
-            <p>
-                {repository.description}
-            </p>
-            <p>
-                (lang: {repository.language})
-            </p>
-            <label>
-                Favourite
-                <input
-                    type="checkbox"
-                    onChange={handleFavouriteClick}
-                    checked={isFavourite}
-                />
-            </label>
+            </h4>
+            <details open>
+                <summary>
+                    Description
+                </summary>
+                <p>
+                    {repository.description}
+                </p>
+            </details>
+                <p>
+                    lang: {repository.language},
+                    stars: {repository.stargazers_count}
+                </p>
+                <fieldset>
+                    <input
+                        type="checkbox"
+                        onChange={handleFavouriteClick}
+                        id={`favourite-${repository.id}`}
+                        checked={isFavourite}
+                    />
+                    <label htmlFor={`favourite-${repository.id}`}>
+                        Favourite
+                    </label>
+                </fieldset>
         </li>
     )
 }

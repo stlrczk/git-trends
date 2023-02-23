@@ -1,0 +1,15 @@
+.window {
+    max-width: 600px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.window-body {
+    max-height: 800px;
+    overflow: auto;
+    margin: 0 !important;
+    padding: 8px;
+}

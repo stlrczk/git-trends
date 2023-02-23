@@ -18,6 +18,7 @@ function useTrendingRepos(language?: Language) {
     return {
         items: trendingReposQuery.data?.items || [],
         isLoading: trendingReposQuery.isLoading,
+        isFetching: trendingReposQuery.isFetching,
     }
 }
 

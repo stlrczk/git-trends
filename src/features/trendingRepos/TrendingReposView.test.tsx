@@ -29,9 +29,9 @@ describe("Trending Repos View", () => {
                 <TrendingReposView />
             </ApiProvider>
             );
-        const header = screen.getByRole("heading");
+        const header = screen.getByText("Trending Repos View");
 
-        expect(header).toHaveTextContent("Trending Repos View")
+        expect(header).toBeVisible()
     })
 
     test('renders empty list', () => {

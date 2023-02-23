@@ -1,3 +1,4 @@
+import "98.css"
 import './App.css';
 import TrendingReposView from './features/trendingRepos/TrendingReposView';
 import { ApiProvider } from './ApiContext';
