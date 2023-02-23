@@ -117,4 +117,19 @@ describe("Trending Repos View", () => {
 
         expect(spy).toBeCalledWith(expect.stringContaining("javascript"))
     })
+
+    test("should call api without language filter if filter is not active", () => {
+        const spy = jest.fn()
+        render(
+            <ApiProvider api={{
+                get: spy
+            }}>
+                <TrendingReposView />
+            </ApiProvider>
+        );
+
+        userEvent.selectOptions(screen.getByRole('combobox'), ["all"])
+
+        expect(spy).toBeCalledWith(expect.not.stringContaining("all"))
+    })
 })

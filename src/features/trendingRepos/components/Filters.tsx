@@ -27,16 +27,18 @@ function Filters({
                     </label>
             </div>
             <div className="field-row">
-                <select
-                    defaultValue="all"
-                    value={languageFilters}
-                    onChange={e => setLanguageFilters(e.target.value as Language)}
-                >
-                    <option value="javascript">Javascript</option>
-                    <option value="python">Python</option>
-                    <option value="golang">Go Lang</option>
-                    <option value={undefined}>Show All</option>
-                </select>
+                <label>Languages:
+                    <select
+                        defaultValue="all"
+                        value={languageFilters}
+                        onChange={e => setLanguageFilters(e.target.value as Language)}
+                    >
+                        <option value="javascript">Javascript</option>
+                        <option value="python">Python</option>
+                        <option value="golang">Go Lang</option>
+                        <option value="all">Show All</option>
+                    </select>
+                </label>
             </div>
         </fieldset>
     )
