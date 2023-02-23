@@ -6,6 +6,12 @@ show in isolated, simple environment how React application
 could be structurized and tested properly, ideally with
 TDD approach.
 
+Deployed on Netlify: https://git-trends-react.netlify.app/
+
+<img width="604" alt="image" src="https://user-images.githubusercontent.com/62992201/221043587-fc7668fa-ca0c-4f9b-aa89-dc5d2fd42ff4.png">
+
+
+
 ## Useful commands
 Since it has been bootstrapped with CRA, simply run
 ```
